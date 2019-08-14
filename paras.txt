@@ -1,0 +1,263 @@
+! This is the parameters file.
+
+
+number of threads used in openmp:
+NTHREADS
+4
+
+common parameters:
+
+PI
+3.141592653589793239
+
+DELTA
+0.000001
+
+BETA
+0.00000000000001
+
+Spring constant for FtsZ beads (unit = 10 pN/nm)
+KFTSZ
+50
+
+unit length of FtsZ monomer (nm):
+LFTSZ
+4.4
+
+Bending rigidity calculated as k_B*T*L_p/l_z at room temp = 295 K (unit = 10^(-20) J)
+KZTHET
+380
+
+for sliding model: angle at each sub-unit in degree
+THETA
+180
+
+for bending model: angle in deg
+ZANGLE
+10
+
+bending direction (-1 for reverse bending)
+BENDIR
+1
+
+distance from FtsA to membrane (nm)
+LMBTOA
+8.0
+
+tethering constant (unit = 10 pN/nm)
+KTETHER
+2.0
+
+distance from FtsZ to membrane at tethering site (nm)
+LTETHER
+16.0
+
+
+max force (unit = 10 pN) constraining connectors to radial direction (constant = force/tether_length)
+KRADIAL
+5.0
+
+force constant to constrain the 1-4 and 2-3 sides of FtsZ to the division plane (unit = 10 pN/nm)
+KPLANE
+2.0
+
+to contrain filament to the circumference (unit = 10 pN/nm)
+KCIRCUM
+0.0
+
+to contrain connectors to the circumference (unit = 10 pN/nm)
+KCIRCON
+2.0
+
+membrane radius (nm)
+MBRAD
+250.0
+
+membrane width (nm)
+MWID
+160.0
+
+Zring width (nm)
+RWID
+100.0
+
+force constant constraining FtsZ withing rwid (unit = 10 pN/nm)
+KWID
+2.0
+
+number of FtsZ monomers
+
+NFTSZ
+800
+
+average Z length (number of beads/filament)
+ZLEN
+40
+
+number of Z monomer to start
+NZSTART
+800
+
+number of rings
+RINGS
+4
+
+interaction between filaments of different rings (1 or 0)
+INTERING
+0
+
+gap between filaments along X axis (nm)
+XGAP
+20
+
+number of beads overlaping between filaments in the same ring
+OVERLAP
+4
+
+tethering frequency
+PTETHER
+0.5
+
+bead size for membrane beads (nm)
+LMEMB
+8.0
+
+force constant for membrane beads (unit = 10 pN/nm)
+KMEMB
+0.8
+
+force constant (unit = 10 pN/nm) exclusion effect from membrane as boundary for FtsZ
+MEMBRANE
+20.0
+
+wall effective thickness, which is distance from wall to membrane (nm)
+WTHICK
+15.0
+
+wall-membrane squeeze range (nm)
+LSQUEEZ
+2.0
+
+rate limit of cell wall remodeling (nm/s)
+WALLRATE
+2.0
+
+
+"Van der Waals" radius of the beads (nm)
+VDWAALS
+6.5
+
+cutoff distance relative to Van der Waals radius
+CUTOFF
+10
+
+separation of wall "hoop" for solid angle calculation (nm)
+DXSOL
+16.0
+
+circumferential separation of wall beads (nm)
+DYZSOL
+16.0
+
+force constant for glycan strands (unit = 10 pN/nm)
+GLYCAN
+10.0
+
+force constant for peptides (unit = 10 pN/nm)
+PEPTIDE
+1.0
+
+turgor pressure (atm)
+TURGOR
+1.0
+
+frequency to check FtsZ turnover
+
+NTURN
+10000
+
+FtsZ treadmills or not (0 or 1)
+JTREAD
+1
+
+treadmill rate of subunit per second 
+PTREAD
+14.0
+
+GTP hydrolysis rate: number of subunits per second
+PHYDRO
+2000000000.0
+
+FtsZ depolymerizes or not
+JDEPO
+1
+
+depolymersization rate of FtsZ: number of subunits per second
+PDEPO
+7
+
+
+addition period of new filament (sec)
+TADD
+25.0
+
+exclusion force constant (unit = 10 pN/nm)
+KVDW
+100.0
+
+Lennard-Jones potential between FtsZ (unit = 10^(-20) J)
+EPS
+50.0
+
+parameters for attraction between membrane beads:
+KPAIR
+0.1
+
+gap to remodel cell wall (nm)
+WGAP
+0.5
+
+how much of Wall GAP is assigned for wall growth in one step of checking:
+GROWSTEP
+0.1
+
+wall growth gradient or no gradient
+WGRADIENT
+1
+
+gradient factor for cell boundary
+FGRAD
+3.0
+
+output frequency
+JPRINT
+100000
+
+time step to print out in micro sec
+PRINTTIME
+10000
+
+number of frame for each dcd
+NOUTPUT
+200
+
+large viscosity to reduce simulation time
+VISCOS
+10
+
+NSTEP
+50000000000
+
+frequency of random force
+
+NRFORCE
+1028
+
+random force scaling (unit = 10 pN)
+
+KSCALE
+0.1
+
+KMBSCALE
+0.1
+

@@ -1,0 +1,4 @@
+to decide type of job: start from the beginning if jobid=1, continue if jobid=2
+ 
+JOBID
+1
