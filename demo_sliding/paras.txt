@@ -246,7 +246,7 @@ VISCOS
 10
 
 NSTEP
-200000
+10000000
 
 frequency of random force
 
