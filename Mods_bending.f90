@@ -17,7 +17,6 @@ contains
             DEALLOCATE(seed)
           END SUBROUTINE
 
-
 !=========================================================
 
    subroutine paras(nstep,jobid,nthreads,jbend,nturnover,jtreadmil,noutput,nrforce,nftsz,zlen,nftszstart,xgap, &
@@ -46,26 +45,20 @@ contains
 
    open(1,file='jobtype.txt')
 
-
    do n=1,1000
       read(1,16)chara
       if(chara(1:5)=='JOBID') exit
    end do
-
    read(1,*)jobid
 
    close(1)
 
-
-
    open(1,file='paras.txt')
-
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:7)=='NTHREAD') exit
    end do
-
    read(1,*)nthreads
 
    do n=1,1000
@@ -78,7 +71,6 @@ contains
       read(1,16)chara
       if(chara(1:5)=='DELTA') exit
    end do
-
    read(1,*)delta
 
    INVDELTA=1.0D0/DELTA
@@ -87,21 +79,18 @@ contains
       read(1,16)chara
       if(chara(1:4)=='BETA') exit
    end do
-
    read(1,*)beta
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:5)=='KFTSZ') exit
    end do
-
    read(1,*)k_z
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:5)=='LFTSZ') exit
    end do
-
    read(1,*)l_z
 
    l_diag=l_z*sqrt(2.0d0)
@@ -110,7 +99,6 @@ contains
       read(1,16)chara
       if(chara(1:6)=='KZTHET') exit
    end do
-
    read(1,*)kz_thet
 
 !  spring constant for the 4 chains of beads:
@@ -121,14 +109,12 @@ contains
       read(1,16)chara
       if(chara(1:6)=='ZANGLE') exit
    end do
-
    read(1,*)angle
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:6)=='BENDIR') exit
    end do
-
    read(1,*)jbend
 
 !  normalized changes in L_z when binding to GDP:
@@ -155,56 +141,43 @@ contains
       read(1,16)chara
       if(chara(1:6)=='LMBTOA') exit
    end do
-
    read(1,*)l_mb_a
-
-!  tethering constant:
-
-!   ktether=k_z*l_z/l_mb_a
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:7)=='KTETHER') exit
    end do
-
    read(1,*)ktether
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:7)=='LTETHER') exit
    end do
-
    read(1,*)ltether
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:7)=='KRADIAL') exit
    end do
-
    read(1,*)kradial
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:6)=='KPLANE') exit
    end do
-
    read(1,*)kplane
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:7)=='KCIRCUM') exit
    end do
-
    read(1,*)kcir
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:7)=='KCIRCON') exit
    end do
-
    read(1,*)kcircon
-
-
 
 !  the distance from A to Z:
 
@@ -214,28 +187,24 @@ contains
       read(1,16)chara
       if(chara(1:5)=='MBRAD') exit
    end do
-
    read(1,*)mbrad
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:4)=='MWID') exit
    end do
-
    read(1,*)mwid
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:4)=='RWID') exit
    end do
-
    read(1,*)rwid
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:4)=='KWID') exit
    end do
-
    read(1,*)kwid
 
 !  Zring radius
@@ -246,21 +215,18 @@ contains
       read(1,16)chara
       if(chara(1:5)=='NFTSZ') exit
    end do
-
    read(1,*)nftsz
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:4)=='ZLEN') exit
    end do
-
    read(1,*)zlen
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:7)=='NZSTART') exit
    end do
-
    read(1,*)nftszstart
 
 
@@ -268,7 +234,6 @@ contains
       read(1,16)chara
       if(chara(1:4)=='XGAP') exit
    end do
-
    read(1,*)xgap
 
 
@@ -276,14 +241,12 @@ contains
       read(1,16)chara
       if(chara(1:7)=='PTETHER') exit
    end do
-
    read(1,*)p_tether
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:5)=='LMEMB') exit
    end do
-
    read(1,*)l_mem
 
 !  membrane rigidity
@@ -292,14 +255,12 @@ contains
       read(1,16)chara
       if(chara(1:5)=='KMEMB') exit
    end do
-
    read(1,*)kmemb
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:4)=='MEMB') exit
    end do
-
    read(1,*)k_mem
 !   k_mem=k_z/10
 
@@ -307,22 +268,13 @@ contains
       read(1,16)chara
       if(chara(1:6)=='WTHICK') exit
    end do
-
    read(1,*)wthick
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:7)=='LSQUEEZ') exit
    end do
-
    read(1,*)lsqueez
-
-!   do n=1,1000
-!      read(1,16)chara
-!      if(chara(1:5)=='KWALL') exit
-!   end do
-
-!   read(1,*)kwall
 
 !  define cell wall radius = membrane radius + wall thickness
 
@@ -332,7 +284,6 @@ contains
       read(1,16)chara
       if(chara(1:7)=='VDWAALS') exit
    end do
-
    read(1,*)eta
 
 !  smaller radius is used for lateral contact interaction
@@ -342,14 +293,12 @@ contains
       read(1,16)chara
       if(chara(1:5)=='DXSOL') exit
    end do
-
    read(1,*)dxsol
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:6)=='DYZSOL') exit
    end do
-
    read(1,*)dyzsol
 
 !  force constant mimicking glycan strands
@@ -358,7 +307,6 @@ contains
       read(1,16)chara
       if(chara(1:6)=='GLYCAN') exit
    end do
-
    read(1,*)kgly
 
 !  force constant mimicking peptide
@@ -367,7 +315,6 @@ contains
       read(1,16)chara
       if(chara(1:7)=='PEPTIDE') exit
    end do
-
    read(1,*)kpep
 
 !  turgor pressure in atm
@@ -376,7 +323,6 @@ contains
       read(1,16)chara
       if(chara(1:6)=='TURGOR') exit
    end do
-
    read(1,*)pturgor
 
    pturgor=pturgor/100
@@ -391,85 +337,60 @@ contains
       read(1,16)chara
       if(chara(1:5)=='NTURN') exit
    end do
-
    read(1,*)nturnover
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:6)=='JTREAD') exit
    end do
-
    read(1,*)jtreadmil
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:6)=='PTREAD') exit
    end do
-
    read(1,*)ptread
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:6)=='PHYDRO') exit
    end do
-
    read(1,*)phyd
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:4)=='TADD') exit
    end do
-
    read(1,*)tadd
-
-
-!   do n=1,1000
-!      read(1,16)chara
-!      if(chara(1:4)=='ROFF') exit
-!   end do
-
-!   read(1,*)r_off
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:4)=='KVDW') exit
    end do
-
    read(1,*)kexcl
-
-!   do n=1,1000
-!      read(1,16)chara
-!      if(chara(1:3)=='EPS') exit
-!   end do
-
-!   read(1,*)eps
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:5)=='KPAIR') exit
    end do
-
    read(1,*)kpair
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:4)=='WGAP') exit
    end do
-
    read(1,*)gap
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:8)=='GROWSTEP') exit
    end do
-
    read(1,*)growstep
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:5)=='WGRAD') exit
    end do
-
    read(1,*)jgradient
 
    jnogradient=1-jgradient
@@ -480,29 +401,18 @@ contains
       read(1,16)chara
       if(chara(1:5)=='FGRAD') exit
    end do
-
    read(1,*)fgrad
-
-
-!   do n=1,1000
-!      read(1,16)chara
-!      if(chara(1:6)=='JPRINT') exit
-!   end do
-
-!   read(1,*)jprint
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:6)=='PRINTT') exit
    end do
-
    read(1,*)printtime
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:6)=='NOUTPU') exit
    end do
-
    read(1,*)noutput
 
 
@@ -510,42 +420,35 @@ contains
       read(1,16)chara
       if(chara(1:6)=='VISCOS') exit
    end do
-
    read(1,*)viscos
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:5)=='NSTEP') exit
    end do
-
    read(1,*)nstep
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:5)=='NRFOR') exit
    end do
-
    read(1,*)nrforce
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:6)=='KSCALE') exit
    end do
-
    read(1,*)k_scale
 
    do n=1,1000
       read(1,16)chara
       if(chara(1:6)=='KMBSCA') exit
    end do
-
    read(1,*)k_scale_mb
 
    close(1)
 
    end subroutine
-
-
 
 !=========================================================
 
@@ -1567,7 +1470,6 @@ contains
       read(1)zb(1:4,n),zcen(n)
 
    end do
-
    read(1)jread(1)
 
    read(1)xa(1:nftsa)
