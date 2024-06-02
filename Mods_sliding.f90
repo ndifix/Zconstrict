@@ -705,44 +705,6 @@ contains
 
    end if
 
-!  for FtsA base:
-
-!   res='AB2'
-
-!   ires=9
-!   write(resno,'(i1)')ires
-
-!   do n=1,nftsa
-
-!      do j=1,4
-
-!         jatom=jatom+1
-
-!         write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
-!         write(2,42)tex,jatom,typ,res,ires,x_a_old(j,n)/10,y_a_old(j,n)/10,z_a_old(j,n)/10,w1,w2,segid
-
-!      end do
-
-!   end do
-
-!   if(jatom<natom_ab)then
-
-!      n0=jatom
-
-!      do n=n0+1,natom_ab
-
-!         jatom=jatom+1
-
-!         write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
-!         write(2,42)tex,jatom,typ,res,ires,zero,zero,zero,w1,w2,segid
-
-!      end do
-
-!   end if
-
-
 !  to visualize Z-A tethering:
 
    res='Z2A'
