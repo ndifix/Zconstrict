@@ -590,33 +590,21 @@ contains
    write(resno,'(i1)')ires
 
    do n=1,nfil
-
       jstart=fstart(n)
-
       do j=1,flen(n)-1
-
          jatom=jatom+1
-
          na=jstart+j-1
-
          write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
          write(2,42)tex,jatom,typ,res,ires,xcen(na)/10,ycen(na)/10,zcen(na)/10,w1,w2,segid
 
          jatom=jatom+1
-
          na=jstart+j
-
          write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
          write(2,42)tex,jatom,typ,res,ires,xcen(na)/10,ycen(na)/10,zcen(na)/10,w1,w2,segid
 
          nbond=nbond+1
-
          bond(1,nbond)=jatom-1
-
          bond(2,nbond)=jatom
-
       end do
 
    end do
