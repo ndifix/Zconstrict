@@ -499,20 +499,6 @@ contains
 
    natom=nwall+nmemb
 
-!  marking filament junctions at 4 beads and their center:
-
-!   natom_z1=natom+nftsz*2
-!   nbond_z1=nbondwal+nftsz
-
-!   natom_z2=natom_z1+nftsz*2
-!   nbond_z2=nbond_z1+nftsz
-
-!   natom_z3=natom_z2+nftsz*2
-!   nbond_z3=nbond_z2+nftsz
-
-!   natom_z4=natom_z3+nftsz*2
-!   nbond_z4=nbond_z3+nftsz
-
    natom_zc=natom+nftsz*2
    nbond_zc=nbondwal+nftsz
 
@@ -520,13 +506,6 @@ contains
    natom=natom_zc+nftsamax
 
    natom_a=natom
-
-!  to visualize FtsA base surface:
-
-!   natom=natom_a+4*nftsamax
-
-!   natom_ab=natom
-
 
 !  to visualize Z-to-A and A-to-membrane tethering:
 
