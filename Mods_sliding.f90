@@ -480,7 +480,6 @@ contains
 52 FORMAT(A50)
 
    open(1,file='zring.psf')
-
    open(2,file='startzring.pdb')
 
 !  start with cell wall:
@@ -490,32 +489,23 @@ contains
    nbond=nbond+nftsz
 
 !  to visualize tethering of FtsZ to membrane via FtsA:
-
    nbond=nbond+2*nftsamax
-
    allocate(bond(2,nbond))
 
 !  calculate total number of atoms:
-
    natom=nwall+nmemb
-
    natom_zc=natom+nftsz*2
    nbond_zc=nbondwal+nftsz
 
 !  adding FtsA:
    natom=natom_zc+nftsamax
-
    natom_a=natom
 
 !  to visualize Z-to-A and A-to-membrane tethering:
-
    natom_z2a=natom+2*nftsamax
    nbond_z2a=nbond_zc+nftsamax
    nbond_a2m=nbond_z2a+nftsamax
-
    natom=natom+2*nftsamax+2*nftsamax
-
-
    write(1,21)natom,'!NATOM'
 
    charg=0.0d0
@@ -524,40 +514,28 @@ contains
    tex='ATOM'
    w1=1.0d0
    w2=0.0d0
-
    zero=0.0
 
 !  for cell wall
-
    res='WAL'
    typ='WAL'
    segid='WAL'
-
    ires=1
    write(resno,'(i1)')ires
 
    jatom=0
-
    do jx=1,nxsol
-
       do jp=1,nphisol
-
          jatom=jatom+1
-
          write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
          write(2,42)tex,jatom,typ,res,ires,xwall(jp,jx)/10,ywall(jp,jx)/10,zwall(jp,jx)/10,w1,w2,segid
-
       end do
-
    end do
 
    bond(1:2,1:nbondwal)=bondwal(1:2,1:nbondwal)
-
    nbond=nbondwal
 
 !  for membrane:
-
    res='MBR'
    typ='MBR'
    segid='MBR'
@@ -566,26 +544,17 @@ contains
    write(resno,'(i1)')ires
 
    do n=1,nmemb
-
       jatom=jatom+1
-
       write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
       write(2,42)tex,jatom,typ,res,ires,xmemb(n)/10,ymemb(n)/10,zmemb(n)/10,w1,w2,segid
-
    end do
 
-
 !  for FtsZ:
-
    segid='FTZ'
-
    typ='FTZ'
 
 !  Z bead type center:
-
    res='ZBC'
-
    ires=3
    write(resno,'(i1)')ires
 
@@ -609,13 +578,9 @@ contains
 
    end do
 
-
    if(nbond<nbond_zc)then
-
       nbond0=nbond
-
       do n=nbond0+1,nbond_zc
-
          jatom=jatom+1
          write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
          write(2,42)tex,jatom,typ,res,ires,zero,zero,zero,w1,w2,segid
@@ -625,15 +590,10 @@ contains
          write(2,42)tex,jatom,typ,res,ires,zero,zero,zero,w1,w2,segid
 
          nbond=nbond+1
-
          bond(1,nbond)=jatom-1
-
          bond(2,nbond)=jatom
-   
       end do
-
    end if
-
 
 !  for FtsA:
 
@@ -645,31 +605,19 @@ contains
    ires=4
    write(resno,'(i1)')ires
 
-
    do n=1,nftsa
-
       jatom=jatom+1
-
       write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
       write(2,42)tex,jatom,typ,res,ires,xa(n)/10,ya(n)/10,za(n)/10,w1,w2,segid
-
    end do
 
    if(jatom<natom_a)then
-
       n0=jatom
-
       do n=n0+1,natom_a
-
          jatom=jatom+1
-
          write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
          write(2,42)tex,jatom,typ,res,ires,zero,zero,zero,w1,w2,segid
-
       end do
-
    end if
 
 !  to visualize Z-A tethering:
@@ -682,42 +630,26 @@ contains
    write(resno,'(i1)')ires
 
    do ja=1,nftsa
-
       n=a2fil(ja)
-
-
       jatom=jatom+1
-
       write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
 !      write(2,42)tex,jatom,typ,res,ires,(xb(1,n)+xb(2,n))/20,(yb(1,n)+yb(2,n))/20,(zb(1,n)+zb(2,n))/20,w1,w2,segid
       write(2,42)tex,jatom,typ,res,ires,xcen(n)/10,ycen(n)/10,zcen(n)/10,w1,w2,segid
 
       jatom=jatom+1
-
       write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
 !      ja=fil2a(n)
-
 !      write(2,42)tex,jatom,typ,res,ires,sum(x_a_old(1:4,ja))/40,sum(y_a_old(1:4,ja))/40,sum(z_a_old(1:4,ja))/40,w1,w2,segid
-
       write(2,42)tex,jatom,typ,res,ires,xa(ja)/10,ya(ja)/10,za(ja)/10,w1,w2,segid
 
-
       nbond=nbond+1
-
       bond(1,nbond)=jatom-1
-
       bond(2,nbond)=jatom
-
    end do
 
    if(nbond<nbond_z2a)then
-
       nbond0=nbond
-
       do n=nbond0+1,nbond_z2a
-
          jatom=jatom+1
          write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
          write(2,42)tex,jatom,typ,res,ires,zero,zero,zero,w1,w2,segid
@@ -727,15 +659,10 @@ contains
          write(2,42)tex,jatom,typ,res,ires,zero,zero,zero,w1,w2,segid
 
          nbond=nbond+1
-
          bond(1,nbond)=jatom-1
-
          bond(2,nbond)=jatom
-   
       end do
-
    end if
-
 
 !  visualize A-membrane tethering:
 
@@ -747,35 +674,23 @@ contains
    write(resno,'(i2)')ires
 
    do n=1,nftsa
-
       jatom=jatom+1
-
       write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
       write(2,42)tex,jatom,typ,res,ires,xa(n)/10,ya(n)/10,za(n)/10,w1,w2,segid
 
       jatom=jatom+1
-
       write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
       jm=a2mem(n)
-
       write(2,42)tex,jatom,typ,res,ires,xmemb(jm)/10,ymemb(jm)/10,zmemb(jm)/10,w1,w2,segid
 
       nbond=nbond+1
-
       bond(1,nbond)=jatom-1
-
       bond(2,nbond)=jatom
-
    end do
 
    if(nbond<nbond_a2m)then
-
       nbond0=nbond
-
       do n=nbond0+1,nbond_a2m
-
          jatom=jatom+1
          write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
          write(2,42)tex,jatom,typ,res,ires,zero,zero,zero,w1,w2,segid
@@ -785,31 +700,10 @@ contains
          write(2,42)tex,jatom,typ,res,ires,zero,zero,zero,w1,w2,segid
 
          nbond=nbond+1
-
          bond(1,nbond)=jatom-1
-
          bond(2,nbond)=jatom
-
       end do
-
    end if
-
-!   if(jatom<natom)then
-
-!      n0=jatom
-
-!      do n=n0+1,natom
-
-!         jatom=jatom+1
-
-!         write(1,20)jatom,segid,resno,res,typ,tex,charg,mass,izero
-
-!         write(2,42)tex,jatom,typ,res,ires,zero,zero,zero,w1,w2,segid
-
-!      end do
-
-!   end if
-
 
    tex='END'
 
