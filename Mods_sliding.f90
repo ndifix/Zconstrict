@@ -4263,17 +4263,13 @@ recursive   subroutine sorting(pairlen,pair)
 
    integer,value::npair_mb
    integer n,n1,n2,n3,n4
-
    integer,allocatable,intent(in),dimension(:,:)::pair_mb,pairpart
-
    integer,allocatable,intent(in),dimension(:)::boundtyp,pairtyp
 
    real(kind=8),value::kpair,l_pair
    real(kind=8),value::l_mem,kmemb,shift
-
    real(kind=8)::dx,dy,dz,d2,dist,invdist,f,dfx,dfy,dfz
    real(kind=8):: invd2,dx34,dy34,dz34,proj,xn,yn,zn
-
    real(kind=8),allocatable,intent(in),dimension(:)::xmemb,ymemb,zmemb
    real(kind=8),allocatable,dimension(:)::fxmemb,fymemb,fzmemb
 
@@ -4286,120 +4282,74 @@ recursive   subroutine sorting(pairlen,pair)
 !$omp shared(pairpart,boundtyp,pairtyp,kmemb,shift)
 
 !$omp do schedule(guided,64)
-
-
    do n=1,npair_mb
-
       n1=pair_mb(1,n)
       n2=pair_mb(2,n)
-
-!if(n1==4.or.n2==4)then
-!print*,'check pair',n,n1,n2
-
-!end if
 
       dx=xmemb(n1)-xmemb(n2)
       dy=ymemb(n1)-ymemb(n2)
       dz=zmemb(n1)-zmemb(n2)
-
       if(boundtyp(n1)==1.and.boundtyp(n2)==2) dx=dx+shift
 
       d2=dx*dx+dy*dy+dz*dz
-
       dist=sqrt(d2)
 
 !     tethering:
-
       if(dist>l_pair)then
-
          f=kpair*(dist-l_pair)*(dist-l_pair)/dist
-
          dfx=f*dx!*invdist
          dfy=f*dy!*invdist
          dfz=f*dz!*invdist
-
 !$omp atomic
          fxmemb(n1)=fxmemb(n1)-dfx
 !$omp atomic
          fymemb(n1)=fymemb(n1)-dfy
 !$omp atomic
          fzmemb(n1)=fzmemb(n1)-dfz
-
 !$omp atomic
          fxmemb(n2)=fxmemb(n2)+dfx
 !$omp atomic
          fymemb(n2)=fymemb(n2)+dfy
 !$omp atomic
          fzmemb(n2)=fzmemb(n2)+dfz
-
       elseif(dist<l_mem)then
-
          f=-kpair*(dist-l_mem)*(dist-l_mem)/dist
-
          dfx=f*dx!*invdist
          dfy=f*dy!*invdist
          dfz=f*dz!*invdist
-
 !$omp atomic
          fxmemb(n1)=fxmemb(n1)-dfx
 !$omp atomic
          fymemb(n1)=fymemb(n1)-dfy
 !$omp atomic
          fzmemb(n1)=fzmemb(n1)-dfz
-
 !$omp atomic
          fxmemb(n2)=fxmemb(n2)+dfx
 !$omp atomic
          fymemb(n2)=fymemb(n2)+dfy
 !$omp atomic
          fzmemb(n2)=fzmemb(n2)+dfz
-
-
-!if(n1==4.or.n2==4) print*,fxmemb(n1),fxmemb(n2)
-
-
       end if
 
-
 !  to keep layer structure of the membrane:
-
-
       if(pairtyp(n)==2) cycle
-
       n3=pairpart(1,n)
       n4=pairpart(2,n)
-
       if(n3==0)then
          cycle
       end if
-
-!if(n1==n3.or.n1==n4.or.n3==n4.or.n2==n3.or.n2==n4)then
-!print*,'pair',n,n1,n2,n3,n4
-!stop
-!end if
-
-!if(n3==4.or.n4==4)print*,'pairpart',n1,n2,n3,n4
 
       dx34=xmemb(n3)-xmemb(n4)
       dy34=ymemb(n3)-ymemb(n4)
       dz34=zmemb(n3)-zmemb(n4)
 
       if(boundtyp(n3)==1.and.boundtyp(n4)==2) dx34=dx34+shift
-
       if(boundtyp(n3)==2.and.boundtyp(n4)==1) dx34=dx34-shift
-
 
       xn=dy*dz34-dz*dy34
       yn=dz*dx34-dx*dz34
       zn=dx*dy34-dy*dx34
-
       invdist=1.0d0/sqrt(xn*xn+yn*yn+zn*zn)
-
-!if(n3==4.or.n4==4)then
-! print*,xn,yn,zn,invdist
-! print*,n3,n4
-!end if
-
 
       xn=xn*invdist
       yn=yn*invdist
@@ -4410,15 +4360,12 @@ recursive   subroutine sorting(pairlen,pair)
       dz=zmemb(n1)-zmemb(n3)
 
       if(boundtyp(n1)==1.and.boundtyp(n3)==2) dx=dx+shift
-
       if(boundtyp(n1)==2.and.boundtyp(n3)==1) dx=dx-shift
 
       proj=dx*xn+dy*yn+dz*zn
-
       dx=proj*xn
       dy=proj*yn
       dz=proj*zn
-
 
       dfx=kmemb*dx
       dfy=kmemb*dy
@@ -4430,35 +4377,28 @@ recursive   subroutine sorting(pairlen,pair)
       fymemb(n1)=fymemb(n1)-dfy
 !$omp atomic
       fzmemb(n1)=fzmemb(n1)-dfz
-
 !$omp atomic
       fxmemb(n2)=fxmemb(n2)-dfx
 !$omp atomic
       fymemb(n2)=fymemb(n2)-dfy
 !$omp atomic
       fzmemb(n2)=fzmemb(n2)-dfz
-
 !$omp atomic
       fxmemb(n3)=fxmemb(n3)+dfx
 !$omp atomic
       fymemb(n3)=fymemb(n3)+dfy
 !$omp atomic
       fzmemb(n3)=fzmemb(n3)+dfz
-
 !$omp atomic
       fxmemb(n4)=fxmemb(n4)+dfx
 !$omp atomic
       fymemb(n4)=fymemb(n4)+dfy
 !$omp atomic
       fzmemb(n4)=fzmemb(n4)+dfz
-
    end do
 
-
 !$omp enddo nowait
-
 !$omp end parallel
-
 
    end subroutine
 
