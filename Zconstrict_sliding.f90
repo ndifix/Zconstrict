@@ -416,9 +416,7 @@ integer omp_get_thread_num,omp_get_num_threads,tid
    thetpair=4*l_mem/rrad
    cos_t_2=(1.0d0-(2*thetpair)**2/2)**2
    thet2by2=thetpair*thetpair/2
-
    oldtime=runtime
-
    dtime=0.0d0
 !-----------------------------------
 
@@ -461,15 +459,10 @@ integer omp_get_thread_num,omp_get_num_threads,tid
    allocate(fxa(nftsamax),fya(nftsamax),fza(nftsamax))
 
 !  to add random forces:
-
-!OK   nrforce=1028
-
    allocate(rxmemb(nmemb,nrforce),rymemb(nmemb,nrforce),rzmemb(nmemb,nrforce))
    allocate(rxbead(nftsz,nrforce),rybead(nftsz,nrforce),rzbead(nftsz,nrforce))
    allocate(rx_a(nftsamax,nrforce),ry_a(nftsamax,nrforce),rz_a(nftsamax,nrforce))
-
    jrforce=nrforce
-
 !------------------------------
 
 !  preserving membrane stiffness and integrity
@@ -487,7 +480,6 @@ integer omp_get_thread_num,omp_get_num_threads,tid
 
 !  pairs of FtsZ beads:
    allocate(pair5_z(2,nftsz*500),pair_z(2,nftsz*100))
-
 !------------------------------------------------------------
 
 !  To write out trajectory
@@ -497,7 +489,6 @@ integer omp_get_thread_num,omp_get_num_threads,tid
    junit2=junit+2
    jfile=jfile+1
    call dcdheader(junit,jfile,natom)
-
    nframe=0
 
    call writedcd(junit,nframe,natom,natom_zc,natom_a,natom_z2a,nxsol,nphisol,nmemb,nftsz,nfil,nftsa, &
@@ -520,7 +511,6 @@ integer omp_get_thread_num,omp_get_num_threads,tid
    end do
 
 !  measuring constriction rate
-
    timecheck0=runtime*0.000001
 
 12 format(f10.7,10x,f10.7,3x,f10.7)
@@ -539,21 +529,18 @@ integer omp_get_thread_num,omp_get_num_threads,tid
          if(timecheck>=timecheck0)then
             exit
          end if
-
          length=length+1
       end do
 
       close(junit2)
 
       open(junit2,file='constrict_rate.txt')
-
       do n=1,length
          read(junit2,*)
       end do
    end if
 
    oldwallcons=wallcons
-
    ndist=1000 ! just to prevent cell wall remodeling from occurring too early
    jdist=0
    nskip1=10
@@ -619,9 +606,7 @@ integer omp_get_thread_num,omp_get_num_threads,tid
 
 !     calculate forces:
       if(jforce==1)then
-
          jrforce=jrforce+1
-
          fxmemb(1:nmemb)=rxmemb(1:nmemb,jrforce)
          fymemb(1:nmemb)=rymemb(1:nmemb,jrforce)
          fzmemb(1:nmemb)=rzmemb(1:nmemb,jrforce)
@@ -664,7 +649,6 @@ integer omp_get_thread_num,omp_get_num_threads,tid
 
       call zrigid(nfil,npair_z,fstart,flen,pair_z,k_z,l_z,cutoff,rho,eps,rswitch,fswitch, &
            xcen,ycen,zcen,fxfil,fyfil,fzfil)
-
 !----------------------------------------------------
 
 !     update coordinates:
@@ -675,12 +659,9 @@ integer omp_get_thread_num,omp_get_num_threads,tid
       call newcoor(npoly,nftsa,nmemb,fmaxmb2,viscos,dtmodz,dtremod,runtime,fxmemb,fymemb,fzmemb, &
                fxa,fya,fza,fxfil,fyfil,fzfil,xmemb,ymemb,zmemb,xa,ya,za,xcen,ycen,zcen, &
                 jforce,nxsol,nphisol,wallwidth,fywall,fzwall,xwall,ywall,zwall,xnorwall,ynorwall,znorwall)
-
 !----------------------------------------------------
 
       if(runtime-oldtime>printtime)then
-
-!      if(mod(jstep-1,1)==0)then
          dtime=dtime+runtime-oldtime
          oldtime=runtime
 
@@ -713,11 +694,9 @@ integer omp_get_thread_num,omp_get_num_threads,tid
             WRITE(junit1,*)NSTART,JFILE,jstep+1,(TIMERUN-TIMESTART)/rate+time0,runtime
             CLOSE(junit1)
 
-!            if((nstep-jstep)/jprint>0)then
                jfile=jfile+1
                call dcdheader(junit,jfile,natom)
                nframe=0
-!            end if
          end if
       end if
    end do
