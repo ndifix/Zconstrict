@@ -994,7 +994,6 @@ contains
    end if
 
 !  read coordinates
-
    open(1,file=filecoor,form='unformatted')
 
    read(1)dxsol,dphisol
@@ -1020,17 +1019,9 @@ contains
 
    read(1)jread(1)
 
-!   do n=1,npoly
-
-!      read(1)xb(1:4,n),xcen(n)
-!      read(1)yb(1:4,n),ycen(n)
-!      read(1)zb(1:4,n),zcen(n)
-
-!   end do
    read(1)xcen(1:npoly)
    read(1)ycen(1:npoly)
    read(1)zcen(1:npoly)
-
 
    read(1)jread(1)
 
@@ -1038,15 +1029,7 @@ contains
    read(1)ya(1:nftsa)
    read(1)za(1:nftsa)
 
-!   do n=1,nftsa
-
-!      read(1)x_a_old(1:4,n),xa(n)
-!      read(1)y_a_old(1:4,n),ya(n)
-!      read(1)z_a_old(1:4,n),za(n)
-!   end do
-
    close(1)
-
 
 !  read configuration
 
@@ -1067,28 +1050,15 @@ contains
    read(1,*)fstart(1:nfil)
 
    n=0
-
-!   startfil=0
-
    endfil=0
-
    do n1=1,nfil
-
-!      startfil(fstart(n1))=1
-
       do n2=1,flen(n1)
-
          n=n+1
-
-
          if(n2==flen(n1)) endfil(n)=1
-
       end do
-
    end do
 
 4  read(1,*)chara
-
    if(chara(1:4)/='FTSA')then
       goto 4
    end if
@@ -1096,7 +1066,6 @@ contains
    read(1,*)jread(2)
    read(1,*)a2mem(1:nftsa)
    read(1,*)a2fil(1:nftsa)
-
 
    close(1)
 
