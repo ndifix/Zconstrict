@@ -2834,44 +2834,29 @@ subroutine r4vec_uniform_01 ( n, seed, r )
 
    integer,value::npair5_z,npair5_mb,nmemb
    integer npair_z,npair_mb
-
    integer n,jmb,jo,ja,jb,jc,jd,np1,np2,nnew
-
    integer n1,n2,n3,n4,jexit,j1,j2,j3,j4,m1,m2,jp
-
    integer,allocatable,intent(in),dimension(:,:)::pair5_z,pair5_mb!,jmbsol
    integer,allocatable,dimension(:,:)::pair_z,pair_mb,pairpart
    integer,allocatable,dimension(:)::boundtyp,pairtyp
-
    integer,allocatable,dimension(:)::mark,markmb,partlen
-
    integer,allocatable,dimension(:,:)::partner
 
-
    real(kind=8),value::cutoff,l_pair,thet2by2,l_mem,xboundmin,xboundmax,shift
-
    real(kind=8):: cutoff2,dx,dy,dz,d2,dx2,rad1,rad2,arg,dist,xc,yc,zc,xpsum,ypsum,zpsum
-
    real(kind=8):: xl1,yl1,zl1,xl2,yl2,zl2,xp1,yp1,zp1,xp2,yp2,zp2,xp3,yp3,zp3
    real(kind=8)::EX1,EY1,EZ1,EX2,EY2,EZ2,TX,TY,TZ,PX,PY,PZ,QX,QY,QZ
    real(kind=8)::DET,INVDET,T,U,V,delta,low,up,up1
    real(kind=8)::xmin,xmax,d2max
-
    real(kind=8),allocatable,intent(in),dimension(:)::xcen,ycen,zcen
    real(kind=8),allocatable,intent(in),dimension(:)::xmemb,ymemb,zmemb!,xboundmin,xboundmax
-
    real(kind=8),allocatable,dimension(:)::pairlen,lentem
 
    allocate(mark(npair5_z))
-
    mark=0
-
    allocate(markmb(npair5_mb))
-
    markmb=0
-
    allocate(lentem(npair5_mb))
-
    cutoff2=cutoff*cutoff
 
 !$omp parallel &
@@ -2881,55 +2866,35 @@ subroutine r4vec_uniform_01 ( n, seed, r )
 !$omp shared(cutoff2,mark,xmemb,ymemb,zmemb,thet2by2,markmb,lentem)
 
 !$omp do schedule (guided,32)
-
   do n=1,npair5_z
-
       n1=pair5_z(1,n)
-
       n2=pair5_z(2,n)
-
       dx=xcen(n1)-xcen(n2)
       dy=ycen(n1)-ycen(n2)
       dz=zcen(n1)-zcen(n2)
-
       d2=dx*dx+dy*dy+dz*dz
-
       if(d2<cutoff2)then
          mark(n)=1
       end if
-
    end do
-
 !$omp end do nowait
 
 
 !$omp do schedule (guided,32)
-
-
    do n=1,npair5_mb
-
       jmb=pair5_mb(1,n)
-
       jo=pair5_mb(2,n)
 
       dx=0.5d0*(xmemb(jmb)-xmemb(jo))
-
       dx2=dx*dx
-
       rad1=sqrt(dx2+ymemb(jmb)*ymemb(jmb)+zmemb(jmb)*zmemb(jmb))
-
       rad2=sqrt(dx2+ymemb(jo)*ymemb(jo)+zmemb(jo)*zmemb(jo))
-
       arg=1.0d0+(dx2-ymemb(jmb)*ymemb(jo)-zmemb(jmb)*zmemb(jo))/rad1/rad2
 
       if(arg<thet2by2)then
-
          markmb(n)=1
-
          lentem(n)=arg
-
       end if
-
    end do
 
 !$omp end do nowait
@@ -2938,109 +2903,63 @@ subroutine r4vec_uniform_01 ( n, seed, r )
    npair_z=0
 
    do n=1,npair5_z
-
       if(mark(n)==1)then
-
          npair_z=npair_z+1
-
          pair_z(1:2,npair_z)=pair5_z(1:2,n)
-
       end if
-
    end do
 
-
    allocate(pairlen(npair5_mb))
-
    npair_mb=0
 
-
    do n=1,npair5_mb
-
       if(markmb(n)==1)then
-
          npair_mb=npair_mb+1
-
          pair_mb(1:2,npair_mb)=pair5_mb(1:2,n)
-
          pairlen(npair_mb)=lentem(n)
-
       end if
-
    end do
 
    deallocate(lentem,mark,markmb)
 
 !--------------------
 !  boundary problem:
-
    boundtyp=0
-
    xmin=xboundmin+l_mem
-
    xmax=xboundmax-l_mem
 
    do n=1,nmemb
-
-
       if(xmemb(n)<xmin)then
-
          boundtyp(n)=1
-
-
       end if
 
       if(xmemb(n)>xmax)then
-
          boundtyp(n)=2
-
-
       end if
-
    end do
 
    d2max=5*l_mem
-
-
    do n1=1,nmemb
-
       if(boundtyp(n1)/=1) cycle
 
       do n2=1,nmemb
-
          if(boundtyp(n2)/=2) cycle
-
          dx=0.5d0*(xmemb(n1)+shift-xmemb(n2))
-
          d2=abs(2*dx)+abs(ymemb(n1)-ymemb(n2))+abs(zmemb(n1)-zmemb(n2))
-
          if(d2>d2max) cycle
-
          dx2=dx*dx
-
          rad1=sqrt(dx2+ymemb(n1)*ymemb(n1)+zmemb(n1)*zmemb(n1))
-
          rad2=sqrt(dx2+ymemb(n2)*ymemb(n2)+zmemb(n2)*zmemb(n2))
-
          arg=1.0d0+(dx2-ymemb(n1)*ymemb(n2)-zmemb(n1)*zmemb(n2))/rad1/rad2
 
          if(arg<thet2by2)then
-
             npair_mb=npair_mb+1
-
             pair_mb(1,npair_mb)=n1
-
             pair_mb(2,npair_mb)=n2
-
             pairlen(npair_mb)=arg
-
-
          end if
-
       end do
-
    end do
-
 
 !-------------------------------------
 
@@ -3050,12 +2969,9 @@ subroutine r4vec_uniform_01 ( n, seed, r )
 
 !   allocate(pairtyp(npair_mb))
    pairtyp=1
-
    yp3=0.0d0; zp3=0.0d0
 
-
    dist=4*l_pair
-
    delta=0.000000000001d0
 
    low=-delta
@@ -3063,20 +2979,16 @@ subroutine r4vec_uniform_01 ( n, seed, r )
    up1=1.02d0
 
    do np1=1,npair_mb-1
-
       if(pairtyp(np1)>1)then
          cycle
       end if
 
       ja=pair_mb(1,np1)
-
       jb=pair_mb(2,np1)
-
 
       xp1=xmemb(ja)
       yp1=ymemb(ja)
       zp1=zmemb(ja)
-
 
       xp2=xmemb(jb)
       yp2=ymemb(jb)
@@ -3098,15 +3010,12 @@ subroutine r4vec_uniform_01 ( n, seed, r )
 
       xp3=0.5d0*(xp1+xp2)
 
-
 !     original sum:
-
       xpsum=xp1+xp2
       ypsum=yp1+yp2
       zpsum=zp1+zp2
 
 !     then scaled:
-
       xp1=xp1+xp1-xp3
       yp1=yp1+yp1
       zp1=zp1+zp1
@@ -3126,17 +3035,12 @@ subroutine r4vec_uniform_01 ( n, seed, r )
 !$omp shared(shift,boundtyp)
 
 !$omp do schedule(guided,64)
-
-
       do np2=np1+1,npair_mb
-
          if(pairtyp(np2)>2)then
             cycle
          end if
 
-
          jc=pair_mb(1,np2)
-
          jd=pair_mb(2,np2)
 
          if(jc==ja.or.jc==jb.or.jd==ja.or.jd==jb)then
@@ -3144,50 +3048,35 @@ subroutine r4vec_uniform_01 ( n, seed, r )
          end if
 
          if(boundtyp(ja)==1.and.boundtyp(jb)==2.and.boundtyp(jc)==0.and.boundtyp(jd)==0) cycle
-
          if(boundtyp(ja)==0.and.boundtyp(jb)==0.and.boundtyp(jc)==1.and.boundtyp(jd)==2) cycle
 
          xl1=xmemb(jc)
          yl1=ymemb(jc)
          zl1=zmemb(jc)
 
-
          xl2=xmemb(jd)
          yl2=ymemb(jd)
          zl2=zmemb(jd)
 
          if(boundtyp(ja)==1.and.boundtyp(jb)==2)then
-
             if(boundtyp(jc)==1) xl1=xl1+shift
-
             if(boundtyp(jd)==1) xl2=xl2+shift
-
          else
-
             if(boundtyp(ja)==1.and.boundtyp(jc)==1.and.boundtyp(jd)==2) xl2=xl2-shift
-
             if(boundtyp(ja)==2.and.boundtyp(jc)==1.and.boundtyp(jd)==2) xl1=xl1+shift
-
          end if
 
-
          dy=abs(ypsum-yl1-yl2)
-
-
          if(dy>dist)then
             cycle
          end if
 
          dz=abs(zpsum-zl1-zl2)
-
-
          if(dz>dist)then
             cycle
          end if
 
          dx=abs(xpsum-xl1-xl2)
-
-
          if(dx>dist)then
             cycle
          end if
@@ -3203,10 +3092,7 @@ subroutine r4vec_uniform_01 ( n, seed, r )
          xl2=xc+(xl2-xc)*up1
          yl2=yc+(yl2-yc)*up1
          zl2=zc+(zl2-zc)*up1
-
 !------------------------------------------
-
-
          DX=XL2-XL1
          DY=YL2-YL1
          DZ=ZL2-ZL1
@@ -3232,7 +3118,6 @@ subroutine r4vec_uniform_01 ( n, seed, r )
          QZ=TX*EY1-EX1*TY
 
          DET=PX*EX1+PY*EY1+PZ*EZ1
-
          if(abs(det)<delta)then
             cycle
          endif
@@ -3240,158 +3125,97 @@ subroutine r4vec_uniform_01 ( n, seed, r )
          INVDET=1.0D0/DET
 
          T=(QX*EX2+QY*EY2+QZ*EZ2)*INVDET
-
-
          IF(T<low.OR.T>up)THEN
             cycle
          END IF
 
          U=(PX*TX+PY*TY+PZ*TZ)*INVDET
-
          IF(U<low.OR.U>up)THEN
             cycle
          END IF
 
          V=(QX*DX+QY*DY+QZ*DZ)*INVDET
-
          if(u+v<low.or.u+v>up)then
             cycle
          end if
 
          pairtyp(np2)=pairtyp(np2)+1
-
-
       end do
-
 !$omp end do nowait
 !$omp end parallel
-
    end do
 
    nnew=0
-
    do n=1,npair_mb
-
       if(pairtyp(n)>2)then
          cycle
       end if
 
       n1=pair_mb(1,n)
       n2=pair_mb(2,n)
-
       if(n1==n2)then
          cycle
       end if
 
       nnew=nnew+1
-
       pair_mb(1,nnew)=n1!pair_mb2(1:2,n)
-
       pair_mb(2,nnew)=n2
-
       pairtyp(nnew)=pairtyp(n)
-
    end do
 
    npair_mb=nnew
-
    deallocate(pairlen)
-
-!print*,'pairs',npair_mb
-
 !-------------------------------
 
 !  list of tetrahedrons:
-
 !  partners of the pairs in tetrahedrons:
-
    allocate(partner(20,nmemb),partlen(nmemb))
-
    partlen=0
 
    do n=1,npair_mb
-
       if(pairtyp(n)==2) cycle
-
       n1=pair_mb(1,n)
-
       n2=pair_mb(2,n)
-
       partlen(n1)=partlen(n1)+1
-
       partner(partlen(n1),n1)=n2
-
       partlen(n2)=partlen(n2)+1
-
       partner(partlen(n2),n2)=n1
-
-
    end do
 
    pairpart=0
-
    do n=1,npair_mb
-
       if(pairtyp(n)==2) cycle
-
       n1=pair_mb(1,n)
-
       n2=pair_mb(2,n)
-
       n3=0
-
       n4=0
-
       jexit=0
 
       do j1=1,partlen(n1)
-
          m1=partner(j1,n1)
-
          do j2=1,partlen(n2)
-
             m2=partner(j2,n2)
-
             if(m1==m2)then
-
                if(n3==0)then
-
                   n3=m1
-
                else
-
                   n4=m1
-
                   jexit=1
-
                   exit
-
                end if
-
             end if
-
          end do
 
          if(jexit==1)then
-
             exit
-
          end if
-
       end do
 
       if(n4>0)then
-
          pairpart(1,n)=n3
          pairpart(2,n)=n4
-
-
-
-
       end if
-
    end do
-
 
    deallocate(partner,partlen)
 
