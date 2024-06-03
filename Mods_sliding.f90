@@ -1131,280 +1131,99 @@ contains
    real(kind=8),allocatable,intent(in),dimension(:)::xmemb,ymemb,zmemb
    real(kind=8),allocatable,intent(in),dimension(:,:)::xwall,ywall,zwall
 
-
    nframe=nframe+1
-
    allocate(xw(natom),yw(natom),zw(natom))
 
    jw=0
-
    do jx=1,nxsol
-
       do jp=1,nphisol
-
          jw=jw+1
-
          xw(jw)=0.1*xwall(jp,jx)
          yw(jw)=0.1*ywall(jp,jx)
          zw(jw)=0.1*zwall(jp,jx)
-
       end do
-
    end do
 
    xw(jw+1:jw+nmemb)=0.1*xmemb(1:nmemb)
    yw(jw+1:jw+nmemb)=0.1*ymemb(1:nmemb)
    zw(jw+1:jw+nmemb)=0.1*zmemb(1:nmemb)
-
    jw=jw+nmemb
 
-!  visualize FtsZ:
-
-
-!   do n=1,nfil
-
-!      jstart=fstart(n)
-
-!      do j=1,flen(n)-1
-
-!         jw=jw+1
-
-!         xw(jw)=0.1*xb(1,jstart+j-1)
-!         yw(jw)=0.1*yb(1,jstart+j-1)
-!         zw(jw)=0.1*zb(1,jstart+j-1)
-
-!         jw=jw+1
-
-!         xw(jw)=0.1*xb(1,jstart+j)
-!         yw(jw)=0.1*yb(1,jstart+j)
-!         zw(jw)=0.1*zb(1,jstart+j)
-
-!      end do
-
-!   end do
-
-!   if(jw<natom_z1)then
-
-!      xw(jw+1:natom_z1)=xw(jw)
-!      yw(jw+1:natom_z1)=yw(jw)
-!      zw(jw+1:natom_z1)=zw(jw)
-
-!      jw=natom_z1
-
-!   end if
-
-!   do n=1,nfil
-
-!      jstart=fstart(n)
-
-!      do j=1,flen(n)-1
-
-!         jw=jw+1
-
-!         xw(jw)=0.1*xb(2,jstart+j-1)
-!         yw(jw)=0.1*yb(2,jstart+j-1)
-!         zw(jw)=0.1*zb(2,jstart+j-1)
-
-!         jw=jw+1
-
-!         xw(jw)=0.1*xb(2,jstart+j)
-!         yw(jw)=0.1*yb(2,jstart+j)
-!         zw(jw)=0.1*zb(2,jstart+j)
-
-!      end do
-
-!   end do
-
-!   if(jw<natom_z2)then
-
-!      xw(jw+1:natom_z2)=xw(jw)
-!      yw(jw+1:natom_z2)=yw(jw)
-!      zw(jw+1:natom_z2)=zw(jw)
-
-!      jw=natom_z2
-
-!   end if
-
-!   do n=1,nfil
-
-!      jstart=fstart(n)
-
-!      do j=1,flen(n)-1
-
-!         jw=jw+1
-
-!         xw(jw)=0.1*xb(3,jstart+j-1)
-!         yw(jw)=0.1*yb(3,jstart+j-1)
-!         zw(jw)=0.1*zb(3,jstart+j-1)
-
-!         jw=jw+1
-
-!         xw(jw)=0.1*xb(3,jstart+j)
-!         yw(jw)=0.1*yb(3,jstart+j)
-!         zw(jw)=0.1*zb(3,jstart+j)
-
-!      end do
-
-!   end do
-
-!   if(jw<natom_z3)then
-
-!      xw(jw+1:natom_z3)=xw(jw)
-!      yw(jw+1:natom_z3)=yw(jw)
-!      zw(jw+1:natom_z3)=zw(jw)
-
-!      jw=natom_z3
-
-!   end if
-
-!   do n=1,nfil
-
-!      jstart=fstart(n)
-
-!      do j=1,flen(n)-1
-
-!         jw=jw+1
-
-!         xw(jw)=0.1*xb(4,jstart+j-1)
-!         yw(jw)=0.1*yb(4,jstart+j-1)
-!         zw(jw)=0.1*zb(4,jstart+j-1)
-
-!         jw=jw+1
-
-!         xw(jw)=0.1*xb(4,jstart+j)
-!         yw(jw)=0.1*yb(4,jstart+j)
-!         zw(jw)=0.1*zb(4,jstart+j)
-
-!      end do
-
-!   end do
-
-!   if(jw<natom_z4)then
-
-!      xw(jw+1:natom_z4)=xw(jw)
-!      yw(jw+1:natom_z4)=yw(jw)
-!      zw(jw+1:natom_z4)=zw(jw)
-
-!      jw=natom_z4
-
-!   end if
-
    do n=1,nfil
-
       jstart=fstart(n)
-
       do j=1,flen(n)-1
-
          jw=jw+1
-
          xw(jw)=0.1*xcen(jstart+j-1)
          yw(jw)=0.1*ycen(jstart+j-1)
          zw(jw)=0.1*zcen(jstart+j-1)
 
          jw=jw+1
-
          xw(jw)=0.1*xcen(jstart+j)
          yw(jw)=0.1*ycen(jstart+j)
          zw(jw)=0.1*zcen(jstart+j)
-
       end do
-
    end do
 
    if(jw<natom_zc)then
-
       xw(jw+1:natom_zc)=xw(jw)
       yw(jw+1:natom_zc)=yw(jw)
       zw(jw+1:natom_zc)=zw(jw)
-
       jw=natom_zc
-
    end if
 
 !  for FtsA:
-
    xw(jw+1:jw+nftsa)=0.1*xa(1:nftsa)
    yw(jw+1:jw+nftsa)=0.1*ya(1:nftsa)
    zw(jw+1:jw+nftsa)=0.1*za(1:nftsa)
-
    jw=jw+nftsa
 
    if(jw<natom_a)then
-
       xw(jw+1:natom_a)=xw(jw)
       yw(jw+1:natom_a)=yw(jw)
       zw(jw+1:natom_a)=zw(jw)
-
       jw=natom_a
-
    end if
 
-
-
-
 !  Z-to-A tethering
-
    do ja=1,nftsa
-
       n=a2fil(ja)
-
-
          jw=jw+1
-
-
          xw(jw)=0.1*xcen(n)
          yw(jw)=0.1*ycen(n)
          zw(jw)=0.1*zcen(n)
 
-
          jw=jw+1
-
-
          xw(jw)=0.1*xa(ja)
          yw(jw)=0.1*ya(ja)
          zw(jw)=0.1*za(ja)
-
-
    end do
 
    if(jw<natom_z2a)then
-
       xw(jw+1:natom_z2a)=xw(jw)
       yw(jw+1:natom_z2a)=yw(jw)
       zw(jw+1:natom_z2a)=zw(jw)
-
       jw=natom_z2a
-
    end if
 
 !  for A-2-membrane tethering:
-
    do n=1,nftsa
-
       jw=jw+1
-
       xw(jw)=0.1*xa(n)
       yw(jw)=0.1*ya(n)
       zw(jw)=0.1*za(n)
 
       jm=a2mem(n)
-
       jw=jw+1
-
       xw(jw)=0.1*xmemb(jm)
       yw(jw)=0.1*ymemb(jm)
       zw(jw)=0.1*zmemb(jm)
-
    end do
 
    if(jw<natom)then
-
       xw(jw+1:natom)=xw(jw)
       yw(jw+1:natom)=yw(jw)
       zw(jw+1:natom)=zw(jw)
-
       jw=natom
-
    end if
 
    write(junit)xw(1:natom)
@@ -1439,15 +1258,10 @@ contains
 
 
    xmin=-(nxsol-1)/2*dxsol
-
    dxsolby2=0.5d0*dxsol
-
    piby2=0.5d0*pi
-
    dphisolby2=0.5d0*dphisol
-
    twopi=2*pi
-
 
 !$omp parallel &
 !$omp default(none) &
@@ -1461,7 +1275,6 @@ contains
 !$omp do schedule(guided,64)
 
    do n=1,nmemb
-
       jx=1+(xmemb(n)-xmin)/dxsol
 
       if(xmemb(n)-xmin-(jx-1)*dxsol>dxsolby2)then
@@ -1477,9 +1290,7 @@ contains
       end if
 
       jsursol(1,n)=jx
-
       jx0=jx
-
 
       if(abs(ymemb(n))<delta)then
          if(zmemb(n)>0.0d0)then
@@ -1487,13 +1298,9 @@ contains
          else
             phi=-piby2
          end if
-
       else
-
          arg=zmemb(n)/ymemb(n)
-
          phi=atan(arg)
-
          if(ymemb(n)<0.0d0)then
             phi=phi+pi
          end if
@@ -1501,73 +1308,48 @@ contains
          if(arg<0.0d0.and.ymemb(n)>0.0d0)then
             phi=phi+twopi
          end if
-
-
       end if
 
       if(phi<dphisolby2)then
          jp=nphisol
       else
-
          jp=phi/dphisol
-
          if(phi-jp*dphisol>dphisolby2)then
             jp=jp+1
          end if
-
       end if
 
       jsursol(2,n)=jp
-
-
       jp0=jp
-
       dist2=1000000.0d0
-
       jxget=0
 
       do j1=1,20
-
          jx=jx0+j1-10
-
          if(jx<1) cycle
-
          if(jx>nxsol) cycle
-
          do j2=1,20
-
             jp=jp0+j2-10
-
             if(jp<1) jp=jp+nphisol
-
             if(jp>nphisol) jp=jp-nphisol
 
             if(ymemb(n)*ywall(jp,jx)+zmemb(n)*zwall(jp,jx)<0.0) cycle
-
             dx=xmemb(n)-xwall(jp,jx)
             dy=ymemb(n)-ywall(jp,jx)
             dz=zmemb(n)-zwall(jp,jx)
 
             arg=dx*xnorwall(jp,jx)+dy*ynorwall(jp,jx)+dz*znorwall(jp,jx)
-
             if(arg<0.0d0)cycle
-
             dx=dx-arg*xnorwall(jp,jx)
             dy=dy-arg*ynorwall(jp,jx)
             dz=dz-arg*znorwall(jp,jx)
-
             d2=dx*dx+dy*dy+dz*dz
 
             if(dist2>d2)then
-
                dist2=d2
-
                jxget=jx
-
                jpget=jp
-
             end if
-
          end do
 
       end do
@@ -1578,12 +1360,8 @@ contains
       end if
 
       jmbsol(1,n)=jxget
-
       jmbsol(2,n)=jpget
-
-
    end do
-
 
 !$omp end do nowait
 
@@ -1613,11 +1391,8 @@ contains
          else
             phi=-piby2
          end if
-
       else
-
          arg=zcen(n)/ycen(n)
-
          phi=atan(arg)
 
          if(ycen(n)<0.0d0)then
@@ -1627,71 +1402,48 @@ contains
          if(arg<0.0d0.and.ycen(n)>0.0d0)then
             phi=phi+twopi
          end if
-
       end if
 
       if(phi<dphisolby2)then
          jp=nphisol
       else
-
          jp=phi/dphisol
-
          if(phi-jp*dphisol>dphisolby2)then
             jp=jp+1
          end if
-
       end if
 
       jp0=jp
-
       dist2=1000000.0d0
-
       jxget=0
-
       do j1=1,20
-
          jx=jx0+j1-10
-
          if(jx<1) cycle
-
          if(jx>nxsol) cycle
 
          do j2=1,20
-
             jp=jp0+j2-10
-
             if(jp<1) jp=jp+nphisol
-
             if(jp>nphisol) jp=jp-nphisol
 
             if(ycen(n)*ysurf(jp,jx)+zcen(n)*zsurf(jp,jx)<0.0) cycle
-
             dx=xcen(n)-xsurf(jp,jx)
             dy=ycen(n)-ysurf(jp,jx)
             dz=zcen(n)-zsurf(jp,jx)
 
             arg=dx*xnorsurf(jp,jx)+dy*ynorsurf(jp,jx)+dz*znorsurf(jp,jx)
-
             if(arg<0.0d0)cycle
-
             dx=dx-arg*xnorsurf(jp,jx)
             dy=dy-arg*ynorsurf(jp,jx)
             dz=dz-arg*znorsurf(jp,jx)
 
             d2=dx*dx+dy*dy+dz*dz
-
             if(dist2>d2)then
-
                dist2=d2
-
                jxget=jx
-
                jpget=jp
-
             end if
-
          end do
-
       end do
 
       if(jxget==0)then
@@ -1700,17 +1452,11 @@ contains
       end if
 
       jzsol(1,n)=jxget
-
       jzsol(2,n)=jpget
-
-
    end do
 
 !$omp end do nowait
-
 !$omp end parallel
-
-
 
    end subroutine
 
@@ -1751,13 +1497,11 @@ contains
 !$omp do schedule(guided,32)
 
    do j=1,nrforce
-
       call r4vec_uniform_01 ( nh1, iseed, rh1 )
       call r4vec_uniform_01 ( nh1, iseed, rh2 )
 
       rx(1:nh1)=sqrt(-2*log(rh1(1:nh1)))*sin(2*pi*rh2(1:nh1))
       rx(nh1+1:nmax)=sqrt(-2*log(rh1(1:nh2)))*cos(2*pi*rh2(1:nh2))
-
 
       call r4vec_uniform_01 ( nh1, iseed, rh1 )
       call r4vec_uniform_01 ( nh1, iseed, rh2 )
@@ -1792,9 +1536,7 @@ contains
 !$omp enddo nowait
 !$omp end parallel
 
-
    deallocate(rh1,rh2)
-
 
    end subroutine
 
