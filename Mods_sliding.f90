@@ -5917,97 +5917,54 @@ recursive   subroutine sorting(pairlen,pair)
    integer,value::npoly,nftsa,nmemb,nxsol,nphisol,jforce
    integer n,jx,jp,jx1,jx2,jp1,jp2
 
-
    real(kind=8),value::fmaxmb2,viscos,wallwidth
-
    real(kind=8)::dt,dtmodz,dtremod,runtime!,fmax
-
    real(kind=8)::gam,dx1,dy1,dz1,dx2,dy2,dz2,xn,yn,zn,invdist
-
    real(kind=8),allocatable,dimension(:),intent(in)::fxmemb,fymemb,fzmemb,fxa,fya,fza,fxfil,fyfil,fzfil
    real(kind=8),allocatable,dimension(:,:),intent(in)::fywall,fzwall,xwall
-
    real(kind=8),allocatable,dimension(:)::xmemb,ymemb,zmemb,xa,ya,za,xcen,ycen,zcen
    real(kind=8),allocatable,dimension(:,:)::ywall,zwall,xnorwall,ynorwall,znorwall
-
    real(kind=8)::fmax2
 
-
-
-
    fmax2=max(fmaxmb2,maxval(fxa(1:nftsa)*fxa(1:nftsa)+fya(1:nftsa)*fya(1:nftsa)+fza(1:nftsa)*fza(1:nftsa)))
-
-
    fmax2=max(fmax2,maxval(fxfil(1:npoly)*fxfil(1:npoly)+fyfil(1:npoly)*fyfil(1:npoly)+fzfil(1:npoly)*fzfil(1:npoly)))
 
-
-
-
    do jx=1,nxsol-1
-
       do jp=1,nphisol
-
          fmax2=max(fmax2,fywall(jp,jx)*fywall(jp,jx)+fzwall(jp,jx)*fzwall(jp,jx))
-
       end do
-
-
    end do
 
-
-
-
-
-
-
    gam=0.01d0/sqrt(fmax2)
-
    dt=viscos*gam
-
    runtime=runtime+dt
-
    dtmodz=dtmodz+dt
-
    dtremod=dtremod+dt
 !--------------------------------
 
 !  update cell wall
-
    do jx=1,nxsol-1
-
       do jp=1,nphisol
-
          ywall(jp,jx)=ywall(jp,jx)+gam*fywall(jp,jx)
-
          zwall(jp,jx)=zwall(jp,jx)+gam*fzwall(jp,jx)
-
       end do
-
    end do
 
 !  periodic boundary:
-
    ywall(1:nphisol,nxsol)=ywall(1:nphisol,1)
    zwall(1:nphisol,nxsol)=zwall(1:nphisol,1)
 
 !  normal vector
-
    if(jforce==1)then
-
       do jx=1,nxsol-1
-
          if(jx==1)then
             jx1=nxsol-1
-!            jx2=2
          else
             jx1=jx-1
-!            jx2=jx+1
          end if
 
          jx2=jx+1
-
          do jp=1,nphisol
-
             if(jp==1)then
                jp1=nphisol
                jp2=jp+1
@@ -6028,7 +5985,6 @@ recursive   subroutine sorting(pairlen,pair)
             dz2=zwall(jp2,jx)-zwall(jp1,jx)
 
             if(jx==1) dx1=dx1+wallwidth
-
             xn=dy1*dz2-dy2*dz1
             yn=dz1*dx2-dz2*dx1
             zn=dx1*dy2-dx2*dy1
@@ -6038,19 +5994,13 @@ recursive   subroutine sorting(pairlen,pair)
             xnorwall(jp,jx)=xn*invdist
             ynorwall(jp,jx)=yn*invdist
             znorwall(jp,jx)=zn*invdist
-
-
          end do
-
       end do
 
 !     periodic boundary
-
       xnorwall(1:nphisol,nxsol)=xnorwall(1:nphisol,1)
       ynorwall(1:nphisol,nxsol)=ynorwall(1:nphisol,1)
       znorwall(1:nphisol,nxsol)=znorwall(1:nphisol,1)
-
-
    end if
 
 !------------------------------
@@ -6065,11 +6015,9 @@ recursive   subroutine sorting(pairlen,pair)
 !$omp do schedule(guided,32)
 
    do n=1,nmemb
-
       xmemb(n)=xmemb(n)+gam*fxmemb(n)
       ymemb(n)=ymemb(n)+gam*fymemb(n)
       zmemb(n)=zmemb(n)+gam*fzmemb(n)
-
    end do
 
 !$omp end do nowait
@@ -6078,36 +6026,22 @@ recursive   subroutine sorting(pairlen,pair)
 !$omp do 
 
    do n=1,nftsa
-
-
       xa(n)=xa(n)+gam*fxa(n)
       ya(n)=ya(n)+gam*fya(n)
       za(n)=za(n)+gam*fza(n)
-
-
    end do
 
 !$omp end do nowait
-
-
 
 !$omp do schedule(guided,32)
 
    do n=1,npoly
-
-
       xcen(n)=xcen(n)+gam*fxfil(n)
       ycen(n)=ycen(n)+gam*fyfil(n)
       zcen(n)=zcen(n)+gam*fzfil(n)
-
    end do
 
 !$omp end do nowait
-
-
-
-
-
 !$omp end parallel
 
    end subroutine
