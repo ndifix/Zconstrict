@@ -2465,51 +2465,32 @@ subroutine r4vec_uniform_01 ( n, seed, r )
 
 !$omp end do nowait
 
-
-
 !$omp do schedule(guided,32)
-
-
    do jmb=1,nmemb-1
-
       n=0
-
       do jo=jmb+1,nmemb
-
          dx=0.5d0*(xmemb(jmb)-xmemb(jo))
-
          d2=abs(2*dx)+abs(ymemb(jmb)-ymemb(jo))+abs(zmemb(jmb)-zmemb(jo))
 
          if(d2>d2max)then
             cycle
          end if
-
          dx2=dx*dx
-
          rad1_2=dx2+ymemb(jmb)*ymemb(jmb)+zmemb(jmb)*zmemb(jmb)
-
          rad2_2=dx2+ymemb(jo)*ymemb(jo)+zmemb(jo)*zmemb(jo)
-
          cos_2=(dx2-ymemb(jmb)*ymemb(jo)-zmemb(jmb)*zmemb(jo))**2/rad1_2/rad2_2
 
          if(cos_2>cos_t_2)then
-
             if(n==nnei)then
                exit
             end if
 
             n=n+1
             pairtemmb(n,jmb)=jo
-
-
          end if
-
       end do
-
       pairnummb(jmb)=n
-
    end do
-
 !$omp end do nowait
 !$omp end parallel
 
@@ -2611,11 +2592,8 @@ subroutine r4vec_uniform_01 ( n, seed, r )
 !$omp do schedule(guided,64)
 
    do n=1,nmemb
-
 !     for membrane to interact with the ring:
-
       jx=1+(xmemb(n)-xmin)/dxsol
-
       if(xmemb(n)-xmin-(jx-1)*dxsol>dxsolby2)then
          jx=jx+1
       end if
@@ -2629,18 +2607,14 @@ subroutine r4vec_uniform_01 ( n, seed, r )
       end if
 
       jsursol(1,n)=jx
-
       if(abs(ymemb(n))<delta)then
          if(zmemb(n)>0.0d0)then
             phi=piby2
          else
             phi=-piby2
          end if
-
       else
-
          arg=zmemb(n)/ymemb(n)
-
          phi=atan(arg)
 
          if(ymemb(n)<0.0d0)then
@@ -2650,59 +2624,38 @@ subroutine r4vec_uniform_01 ( n, seed, r )
          if(arg<0.0d0.and.ymemb(n)>0.0d0)then
             phi=phi+twopi
          end if
-
-
       end if
 
       if(phi<dphisolby2)then
          jp=nphisol
       else
-
          jp=phi/dphisol
-
          if(phi-jp*dphisol>dphisolby2)then
             jp=jp+1
          end if
-
       end if
-
       jsursol(2,n)=jp
-
 !------------------
 !     for membrane to interact with the wall:
 
       jx0=jmbsol(1,n)
-
       jp0=jmbsol(2,n)
-
       jxget=jx0
       jpget=jp0
-
       dist2=10000000.0d0
-
       do j1=1,3
-
          jx=jx0-2+j1
-
          if(jx<1) cycle
-
          if(jx>nxsol) cycle
-
          do j2=1,3
-
             jp=jp0-2+j2
-
             if(jp<1) jp=jp+nphisol
-
             if(jp>nphisol) jp=jp-nphisol
-
-
             dx=xmemb(n)-xwall(jp,jx)
             dy=ymemb(n)-ywall(jp,jx)
             dz=zmemb(n)-zwall(jp,jx)
 
             arg=dx*xnorwall(jp,jx)+dy*ynorwall(jp,jx)+dz*znorwall(jp,jx)
-
             if(arg<0.0d0)cycle
 
             dx=dx-arg*xnorwall(jp,jx)
@@ -2710,27 +2663,15 @@ subroutine r4vec_uniform_01 ( n, seed, r )
             dz=dz-arg*znorwall(jp,jx)
 
             d2=dx*dx+dy*dy+dz*dz
-
             if(dist2>d2)then
-
                dist2=d2
-
                jxget=jx
-
                jpget=jp
-
             end if
-
          end do
-
       end do
-
       jmbsol(1,n)=jxget
-
       jmbsol(2,n)=jpget
-
-
-
    end do
 
 !$omp end do nowait
@@ -2741,85 +2682,42 @@ subroutine r4vec_uniform_01 ( n, seed, r )
 !$omp do schedule (guided,32)
 
    do n=1,npoly
-
-
       jx0=jzsol(1,n)
-
       jp0=jzsol(2,n)
-
       jxget=jx0
       jpget=jp0
-
       dist2=10000000.0d0
-
-
       do j1=1,3
-
          jx=jx0-2+j1
-
          if(jx<1) cycle
-
          if(jx>nxsol) cycle
-
-
          do j2=1,3
-
             jp=jp0+j2-2
-
             if(jp<1) jp=jp+nphisol
-
             if(jp>nphisol) jp=jp-nphisol
-
-
             dx=xcen(n)-xsurf(jp,jx)
             dy=ycen(n)-ysurf(jp,jx)
             dz=zcen(n)-zsurf(jp,jx)
 
-
             arg=dx*xnorsurf(jp,jx)+dy*ynorsurf(jp,jx)+dz*znorsurf(jp,jx)
-
             if(arg<0.0d0)cycle
 
             dx=dx-arg*xnorsurf(jp,jx)
             dy=dy-arg*ynorsurf(jp,jx)
             dz=dz-arg*znorsurf(jp,jx)
-
             d2=dx*dx+dy*dy+dz*dz
-
             if(dist2>d2)then
-
                dist2=d2
-
                jxget=jx
-
                jpget=jp
-
             end if
-
          end do
-
       end do
-
       jzsol(1,n)=jxget
-
       jzsol(2,n)=jpget
-
    end do
-
 !$omp end do nowait
-
-
-
 !$omp end parallel
-
-!   do n=1,nftsa
-
-!      jm=a2mem(n)
-
-!      jasol(1:2,n)=jsursol(1:2,jm)
-
-!   end do
-
 
    end subroutine
 
@@ -3314,62 +3212,41 @@ recursive   subroutine sorting(pairlen,pair)
    implicit none
 
    integer,value::nskip1,nskip2,nmemb,nphisol,nxsol
-
    integer ndist
-
    integer n,jx,jp
-
    integer,allocatable,intent(in),dimension(:,:)::jmbsol
    integer,allocatable,dimension(:,:)::jdist
    integer,allocatable,dimension(:,:)::check
    double precision,value::wthick,gap
-
    double precision dx,dy,dz,arg
-
    double precision,allocatable,intent(in),dimension(:)::xmemb,ymemb,zmemb
    double precision,allocatable,dimension(:,:),intent(in)::xwall,ywall,zwall,xnorwall,ynorwall,znorwall
    double precision,allocatable,dimension(:,:)::dist
 
    ndist=ndist+1
-
    if(ndist<nskip2/nskip1/2) return
 
    allocate(dist(nphisol,nxsol),check(nphisol,nxsol))
-
    dist=1000.0d0
-
    check=0
-
    do n=1,nmemb
-
       jx=jmbsol(1,n)
-
       jp=jmbsol(2,n)
-
       check(jp,jx)=1
 
       dx=xmemb(n)-xwall(jp,jx)
       dy=ymemb(n)-ywall(jp,jx)
       dz=zmemb(n)-zwall(jp,jx)
-
       arg=dx*xnorwall(jp,jx)+dy*ynorwall(jp,jx)+dz*znorwall(jp,jx)
-
       if(arg<dist(jp,jx)) dist(jp,jx)=arg
-
    end do
 
    do jx=1,nxsol-1
-
       do jp=1,nphisol
-
          if(check(jp,jx)==0) cycle
-
          if(dist(jp,jx)>wthick+gap) jdist(jp,jx)=jdist(jp,jx)+1
-
       end do
-
    end do
-
 
    deallocate(dist,check)
 
@@ -3424,28 +3301,16 @@ recursive   subroutine sorting(pairlen,pair)
 !$omp private(n,jx,jp,tid) &
 !$omp shared(nmemb,jsursol,nsurfcount,ymemb,zmemb,rsurftemp) 
 !$omp do schedule(guided,64)
-
    do n=1,nmemb
-
       tid=omp_get_thread_num()+1
 !tid=1
 
 !     for membrane surface:
-
       jx=jsursol(1,n)
-
       jp=jsursol(2,n)
-
-
       nsurfcount(tid,jp,jx)=nsurfcount(tid,jp,jx)+1
-
-
       rsurftemp(tid,jp,jx)=rsurftemp(tid,jp,jx)+sqrt(ymemb(n)*ymemb(n)+zmemb(n)*zmemb(n))!radmemb(tid,jp,jx)
-
-
-
    end do
-
 !$omp enddo nowait
 !$omp end parallel
 
