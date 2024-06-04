@@ -3505,33 +3505,23 @@ recursive   subroutine sorting(pairlen,pair)
                   xcen,ycen,zcen,xa,ya,za,fxmemb,fymemb,fzmemb, &
                    fxrep,fyrep,fzrep,fxa,fya,fza)
 
-
-
    implicit none
 
    integer,value::nthreads,nmemb,npoly,nftsa,nxsol,nphisol
    integer n,jx,jp,jm,ja,tid,omp_get_thread_num,jm1,jm2
-
    integer,allocatable,intent(in),dimension(:,:)::jmbsol,jzsol,nsurf,jsursol
    integer,allocatable,intent(in),dimension(:)::a2mem,a2fil,fil2a,endfil
 
    real(kind=8),value::kwall,wthick,lsqueez,l_mem,k_mem,l_a_z,l_mb_a,ktether,xboundmin,xboundmax
-
    real(kind=8)::xn,yn,zn,dist,dx,dy,dz,d2,f,dfx,dfy,dfz,invrad,proj
-
-
    real(kind=8),allocatable,intent(in),dimension(:,:)::xwall,ywall,zwall,xnorwall,ynorwall,znorwall
    real(kind=8),allocatable,intent(in),dimension(:,:)::xsurf,ysurf,zsurf,xnorsurf,ynorsurf,znorsurf
-
    real(kind=8),allocatable,intent(in),dimension(:)::xmemb,ymemb,zmemb!,xboundmin,xboundmax
    real(kind=8),allocatable,intent(in),dimension(:)::xcen,ycen,zcen,xa,ya,za
-
    real(kind=8),allocatable,dimension(:)::fxmemb,fymemb,fzmemb
    real(kind=8),allocatable,dimension(:)::fxrep,fyrep,fzrep,fxa,fya,fza
    real(kind=8),allocatable,dimension(:,:)::fxsurf,fysurf,fzsurf
    double precision,allocatable,dimension(:,:)::ftem
-
-
 
 !$omp parallel &
 !$omp default(none) &
@@ -3545,17 +3535,11 @@ recursive   subroutine sorting(pairlen,pair)
 !$omp shared(fxmemb,fymemb,fzmemb) 
 
 !$omp do schedule(guided,64)
-
-
    do n=1,nmemb
-
-
       jx=jmbsol(1,n)
-
       jp=jmbsol(2,n)
 
 !     normal vector of the wall:
-
       xn=xnorwall(jp,jx)
       yn=ynorwall(jp,jx)
       zn=znorwall(jp,jx)
@@ -3564,75 +3548,45 @@ recursive   subroutine sorting(pairlen,pair)
       dy=ymemb(n)-ywall(jp,jx)
       dz=zmemb(n)-zwall(jp,jx)
 
-
       dist=dx*xn+dy*yn+dz*zn-wthick
-
       if(dist<0.0d0)then
-
-
          f=kwall*dist*dist
-
          fxmemb(n)=fxmemb(n)+f*xn
          fymemb(n)=fymemb(n)+f*yn
          fzmemb(n)=fzmemb(n)+f*zn
-
       elseif(dist<lsqueez)then
-
          f=-kwall*dist*dist
 
          fxmemb(n)=fxmemb(n)+f*xn
          fymemb(n)=fymemb(n)+f*yn
          fzmemb(n)=fzmemb(n)+f*zn
-
       else
-
          f=-kwall*lsqueez*lsqueez
 
          fxmemb(n)=fxmemb(n)+f*xn
          fymemb(n)=fymemb(n)+f*yn
          fzmemb(n)=fzmemb(n)+f*zn
-
       end if
 
-
 !     blocking from the x boundaries:
-
       if(xmemb(n)<xboundmin)then
          fxmemb(n)=fxmemb(n)+xboundmin-xmemb(n)
       else if(xmemb(n)>xboundmax)then
          fxmemb(n)=fxmemb(n)+xboundmax-xmemb(n)
       end if
-
-
    end do
-
 !$omp enddo nowait
-
 !$omp end parallel
 
-
-
-
 !  tethering FtsZ-FtsA-membrane:
-
-
-
    allocate(ftem(nphisol,nxsol))
    ftem=0.0d0
-
-
    jm1=0
 
-
    do n=1,npoly
-
-
 !     first, membrane serves as a boundary for FtsZ:
-
       jx=jzsol(1,n)
-
       jp=jzsol(2,n)
-
 
       dx=xcen(n)-xsurf(jp,jx)
       dy=ycen(n)-ysurf(jp,jx)
@@ -3643,65 +3597,35 @@ recursive   subroutine sorting(pairlen,pair)
       zn=znorsurf(jp,jx)
 
       dist=dx*xn+dy*yn+dz*zn
-
       if(dist<l_mem)then
-
          if(dist<0.0d0) dist=0.0d0
-
          f=k_mem*(l_mem-dist)/(dist+1.0d0)
-
 
          fxrep(n)=fxrep(n)+f*xn
          fyrep(n)=fyrep(n)+f*yn
          fzrep(n)=fzrep(n)+f*zn
 
-
          ftem(jp,jx)=ftem(jp,jx)-f
-
-
       end if
-
-
-
-
    end do
 
-
-
-
-
-
-
 !  tethering FtsA to membrane and FtsZ
-
-
-
-
    do ja=1,nftsa
-
       n=a2fil(ja)
-
       jx=jzsol(1,n)
-
       jp=jzsol(2,n)
-
 
       xn=xnorsurf(jp,jx)
       yn=ynorsurf(jp,jx)
       zn=znorsurf(jp,jx)
 
 !     to membrane
-
       jm=a2mem(ja)
 
       dx=xmemb(jm)-xa(ja)
       dy=ymemb(jm)-ya(ja)
       dz=zmemb(jm)-za(ja)
-
       dist=sqrt(dx*dx+dy*dy+dz*dz)
-
-!      if(dist>l_mb_a)then
-
          f=ktether*(dist-l_mb_a)/dist
 
          dfx=f*dx
@@ -3715,40 +3639,14 @@ recursive   subroutine sorting(pairlen,pair)
          fxmemb(jm)=fxmemb(jm)-dfx
          fymemb(jm)=fymemb(jm)-dfy
          fzmemb(jm)=fzmemb(jm)-dfz
-
-!      end if
-
-
-
 !     align MB-A connection rigidly along the normal vector of the membrane
-
-!      proj=dx*xn+dy*yn+dz*zn
-
-!      dx=dx-proj*xn
-!      dy=dy-proj*yn
-!      dz=dz-proj*zn
-
-
-
-!      fxmemb(jm)=fxmemb(jm)-knormal*dx
-!      fymemb(jm)=fymemb(jm)-knormal*dy
-!      fzmemb(jm)=fzmemb(jm)-knormal*dz
-
-!      fxa(ja)=fxa(ja)+knormal*dx
-!      fya(ja)=fya(ja)+knormal*dy
-!      fza(ja)=fza(ja)+knormal*dz
-
-
 !     to FtsZ
-
       n=a2fil(ja)
-
       dx=xcen(n)-xa(ja)
       dy=ycen(n)-ya(ja)
       dz=zcen(n)-za(ja)
 
       dist=sqrt(dx*dx+dy*dy+dz*dz)
-
       f=ktether*(dist-l_a_z)/dist
 
       dfx=f*dx
@@ -3759,68 +3657,29 @@ recursive   subroutine sorting(pairlen,pair)
       fya(ja)=fya(ja)+dfy
       fza(ja)=fza(ja)+dfz
 
-
       fxrep(n)=fxrep(n)-dfx
       fyrep(n)=fyrep(n)-dfy
       fzrep(n)=fzrep(n)-dfz
-
-!     align Z-A connection rigidly along the normal vector of the membrane
-
-!      proj=dx*xn+dy*yn+dz*zn
-
-!      dx=dx-proj*xn
-!      dy=dy-proj*yn
-!      dz=dz-proj*zn
-
-
-
-!      dfx=knormal*dx
-!      dfy=knormal*dy
-!      dfz=knormal*dz
-
-!      fxa(ja)=fxa(ja)+dfx!knormal*dx
-!      fya(ja)=fya(ja)+dfy!knormal*dy
-!      fza(ja)=fza(ja)+dfz!knormal*dz
-
-!      fxrep(n)=fxrep(n)-dfx!knormal*dx
-!      fyrep(n)=fyrep(n)-dfy!knormal*dy
-!      fzrep(n)=fzrep(n)-dfz!knormal*dz
-
-
    end do
 
-
-
-
 !  update force on membrane
-
    allocate(fxsurf(nphisol,nxsol),fysurf(nphisol,nxsol),fzsurf(nphisol,nxsol))
 
-
-
    do jx=1,nxsol-1
-
       do jp=1,nphisol
-
          f=ftem(jp,jx)/nsurf(jp,jx)
-
          if(jx==1) f=f+ftem(jp,nxsol)/nsurf(jp,jx)
 
          fxsurf(jp,jx)=f*xnorsurf(jp,jx)
          fysurf(jp,jx)=f*ynorsurf(jp,jx)
          fzsurf(jp,jx)=f*znorsurf(jp,jx)
-
       end do
-
    end do
 
 !  periodic boundary
-
    fxsurf(1:nphisol,nxsol)=fxsurf(1:nphisol,1)
    fysurf(1:nphisol,nxsol)=fysurf(1:nphisol,1)
    fzsurf(1:nphisol,nxsol)=fzsurf(1:nphisol,1)
-
-
 
 !$omp parallel &
 !$omp default(none) &
@@ -3828,25 +3687,18 @@ recursive   subroutine sorting(pairlen,pair)
 !$omp shared(nmemb,jsursol,fxmemb,fymemb,fzmemb,fxsurf,fysurf,fzsurf)
 
 !$omp do
-
    do n=1,nmemb
-
       jx=jsursol(1,n)
       jp=jsursol(2,n)
 
       fxmemb(n)=fxmemb(n)+fxsurf(jp,jx)
       fymemb(n)=fymemb(n)+fysurf(jp,jx)
       fzmemb(n)=fzmemb(n)+fzsurf(jp,jx)
-
    end do
 
 !$omp enddo nowait
 !$omp end parallel
-
-
    deallocate(fxsurf,fysurf,fzsurf,ftem)
-
-
    end subroutine
 
 !============================================
