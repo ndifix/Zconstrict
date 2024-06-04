@@ -1665,129 +1665,74 @@ subroutine r4vec_uniform_01 ( n, seed, r )
    allocate(mark(nmemb))
 
    mark=0
-
    mark(a2mem(1:nftsa))=1
 
    do n=1,nfil
-
       jstart=fstart(n)
-
       length=flen(n)
-
-
       do j=length,1,-1
-
          jz=jstart+j-1
-
          if(gtp(jz)==0) cycle
 
          call random_number(r)
-
-
          if(phyd*dtmodz>r) gtp(jz)=0
-
          exit
-
       end do
 
-!      if(jtreadmil==0) cycle
-
       call random_number(r)
-
       if(ptread*dtmodz<r) cycle
 
-
-
       ja_end=fil2a(jstart+length-1)
-
       do j=length,2,-1
-
          jz=jstart+j-1
-
-!         xb(1:4,jz)=xb(1:4,jz-1)
-!         yb(1:4,jz)=yb(1:4,jz-1)
-!         zb(1:4,jz)=zb(1:4,jz-1)
 
          xcen(jz)=xcen(jz-1)
          ycen(jz)=ycen(jz-1)
          zcen(jz)=zcen(jz-1)
-
          ja=fil2a(jz-1)
 
          fil2a(jz)=ja
-
          if(ja>0) a2fil(ja)=jz
 
          jzsol(1:2,jz)=jzsol(1:2,jz-1)
-
          gtp(jz)=gtp(jz-1)
-
       end do
-
-
-!     add a new unit at the filament tip:
-!     Mar 12, 2018: add new units to the circumferential direction.
-!     Mar 14, 2018: reverse back to the previous alignment of the tip
-
-!      xb(1:4,jstart)=2*xb(1:4,jstart+1)-xb(1:4,jstart+2)
-!      yb(1:4,jstart)=2*yb(1:4,jstart+1)-yb(1:4,jstart+2)
-!      zb(1:4,jstart)=2*zb(1:4,jstart+1)-zb(1:4,jstart+2)
 
       xcen(jstart)=2*xcen(jstart+1)-xcen(jstart+2)
       ycen(jstart)=2*ycen(jstart+1)-ycen(jstart+2)
       zcen(jstart)=2*zcen(jstart+1)-zcen(jstart+2)
 
       if(ja_end>0)then
-
          fil2a(jstart)=ja_end
-
          a2fil(ja_end)=jstart
-
          mark(a2mem(ja_end))=0
-
          dist2=100000.0d0
-
          jpick=0
-
          do jm=1,nmemb
-
             if(mark(jm)==1) cycle
 
             dx=xcen(jstart)-xmemb(jm)
             dy=ycen(jstart)-ymemb(jm)
             dz=zcen(jstart)-zmemb(jm)
-
             d2=dx*dx+dy*dy+dz*dz
 
             if(d2<dist2)then
-
                dist2=d2
-
                jpick=jm
-
             end if
-
          end do
 
          if(jpick==0) print*,'ERROR: jpick for a2mem not assigned'
-
          a2mem(ja_end)=jpick
-
          mark(jpick)=1
-
          xa(ja_end)=0.5d0*(xcen(jstart)+xmemb(jpick))
          ya(ja_end)=0.5d0*(ycen(jstart)+ymemb(jpick))
          za(ja_end)=0.5d0*(zcen(jstart)+zmemb(jpick))
-
-
       else
-
          fil2a(jstart)=0
-
       end if
 
 !     note: jzsol for the tip is temporarily unchanged
-
 
    end do
 
