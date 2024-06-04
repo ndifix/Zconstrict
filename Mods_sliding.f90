@@ -1762,23 +1762,16 @@ subroutine r4vec_uniform_01 ( n, seed, r )
 
 
    check=0
-
    do n=1,nfil
 
       length=flen(n)
-
       if(length<4) cycle
 
       call random_number(r)
-
       if(pdepo*dtmodz>r)then
-
          check=check+1
-
          flen(n)=length-1
-
       end if
-
    end do
 
    if(check==0)then
@@ -1788,70 +1781,38 @@ subroutine r4vec_uniform_01 ( n, seed, r )
 !  cleaning up the system:
 
    npoly=0; nftsa=0
-
-
    endfil=0
-
    do n=1,nfil
-
-
       jstart=fstart(n)
-
       fstart(n)=npoly+1
 
-
       do j=1,flen(n)
-
          jz=jstart+j-1
-
          npoly=npoly+1
-
          ringid(npoly)=ringid(jz)
-
          filid(npoly)=n
 
          ja=fil2a(jz)
-
          if(ja>0)then
-
             nftsa=nftsa+1
-
             a2mem(nftsa)=a2mem(ja)
-
             xa(nftsa)=xa(ja)
             ya(nftsa)=ya(ja)
             za(nftsa)=za(ja)
 
-
             fil2a(npoly)=nftsa
-
             a2fil(nftsa)=npoly
-
          else
-
             fil2a(npoly)=0
-
-
          end if
 
          jzsol(1:2,npoly)=jzsol(1:2,jz)
-
          xcen(npoly)=xcen(jz)
-
          ycen(npoly)=ycen(jz)
-
          zcen(npoly)=zcen(jz)
 
-!         xb(1:4,npoly)=xb(1:4,jz)
-!         yb(1:4,npoly)=yb(1:4,jz)
-!         zb(1:4,npoly)=zb(1:4,jz)
-
-
          if(j==flen(n)) endfil(npoly)=1
-
-
       end do
-
    end do
 
    end subroutine
